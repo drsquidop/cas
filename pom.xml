@@ -386,9 +386,25 @@ pTSqrOnmqmUUnopqmvummmmmmUUnopqmvummmmmmUUA1jJ
         </configuration>
       </plugin>
     </plugins>
+
+      <extensions>
+          <extension>
+              <groupId>org.apache.maven.wagon</groupId>
+              <artifactId>wagon-ssh</artifactId>
+              <version>1.0</version>
+          </extension>
+      </extensions>
   </build>
 
-  <dependencies>
+    <distributionManagement>
+        <repository>
+            <id>gpn-test</id>
+            <name>GPN Repository</name>
+            <url>scp://uat.oddz.int/opt/jetty/webapps/maven</url>
+        </repository>
+    </distributionManagement>
+
+    <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -793,7 +809,7 @@ pTSqrOnmqmUUnopqmvummmmmmUUnopqmvummmmmmUUA1jJ
   <modules>
     <module>cas-server-core</module>
     <module>cas-server-webapp</module>
-    <module>cas-server-support-generic</module>
+<!--    <module>cas-server-support-generic</module>
     <module>cas-server-support-jdbc</module>
     <module>cas-server-support-ldap</module>
     <module>cas-server-support-legacy</module>
@@ -810,6 +826,7 @@ pTSqrOnmqmUUnopqmvummmmmmUUnopqmvummmmmmUUA1jJ
     <module>cas-server-uber-webapp</module>
     <module>cas-server-documentation</module>
     <module>cas-server-extension-clearpass</module>
+-->
   </modules>
 
   <reporting>
