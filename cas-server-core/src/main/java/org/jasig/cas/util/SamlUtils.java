@@ -53,6 +53,8 @@ import org.jdom.Element;
 import org.jdom.input.DOMBuilder;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
 /**
@@ -64,6 +66,7 @@ import org.w3c.dom.Node;
  */
 public final class SamlUtils {
 
+    protected final static Logger log = LoggerFactory.getLogger(SamlUtils.class);
     private static final String JSR_105_PROVIDER = "org.jcp.xml.dsig.internal.dom.XMLDSigRI";
 
     private static final String SAML_PROTOCOL_NS_URI_V20 = "urn:oasis:names:tc:SAML:2.0:protocol";
@@ -120,7 +123,9 @@ public final class SamlUtils {
                 .singletonList(sigFactory.newTransform(Transform.ENVELOPED,
                     (TransformParameterSpec) null));
 
-            final Reference ref = sigFactory.newReference("", sigFactory
+            //get ID of element
+            final String elementUri = "#" + element.getAttribute("ID").getValue();
+            final Reference ref = sigFactory.newReference(elementUri, sigFactory
                 .newDigestMethod(DigestMethod.SHA1, null), envelopedTransform,
                 null, null);
 
@@ -159,6 +164,7 @@ public final class SamlUtils {
             // w3c
             // representation)
             org.w3c.dom.Element w3cElement = toDom(element);
+            w3cElement.setIdAttributeNode(w3cElement.getAttributeNode("ID"),true);
 
             // Create a DOMSignContext and specify the DSA/RSA PrivateKey and
             // location of the resulting XMLSignature's parent element

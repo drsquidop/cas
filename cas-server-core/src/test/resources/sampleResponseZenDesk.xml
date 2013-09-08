@@ -1,0 +1,37 @@
+<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" ID="s2202bbbbafa9d270d1c15990b738f4ab36139d463"
+                InResponseTo="_e4a78780-35da-012e-8ea7-0050569200d8" Version="2.0" IssueInstant="2011-03-21T11:22:02Z"
+                Destination="https://accountname.zendesk.com/access/saml">
+    <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">myidp.entity.id
+    </saml:Issuer>
+    <samlp:Status xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+        <samlp:StatusCode xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+                          Value="urn:oasis:names:tc:SAML:2.0:status:Success">
+        </samlp:StatusCode>
+    </samlp:Status>
+    <saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="s2af6627280d72f061beb9f8b1635bd54cc2892317"
+                    IssueInstant="2011-03-21T11:22:02Z" Version="2.0">
+        <saml:Issuer>myidp.entity.id</saml:Issuer>
+        <saml:Subject>
+            <saml:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+                         NameQualifier="idp.accountname.com">firstnam.lastname@company.com
+            </saml:NameID>
+            <saml:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+                <saml:SubjectConfirmationData InResponseTo="_e4a78780-35da-012e-8ea7-0050569200d8"
+                                              NotOnOrAfter="2014-03-21T11:32:02Z"
+                                              Recipient="https://accountname.zendesk.com/access/saml"/>
+            </saml:SubjectConfirmation>
+        </saml:Subject>
+        <saml:Conditions NotBefore="2011-03-21T11:12:02Z" NotOnOrAfter="2014-03-21T11:32:02Z">
+            <saml:AudienceRestriction>
+                <saml:Audience>zendesk.com</saml:Audience>
+            </saml:AudienceRestriction>
+        </saml:Conditions>
+        <saml:AuthnStatement AuthnInstant="2011-03-21T11:22:02Z"
+                             SessionIndex="s25c49ea33a9598e2c930899f528b5f00fde2fe901">
+            <saml:AuthnContext>
+                <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport
+                </saml:AuthnContextClassRef>
+            </saml:AuthnContext>
+        </saml:AuthnStatement>
+    </saml:Assertion>
+</samlp:Response>

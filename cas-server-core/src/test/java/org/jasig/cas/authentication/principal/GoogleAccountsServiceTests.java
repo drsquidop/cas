@@ -21,6 +21,7 @@ package org.jasig.cas.authentication.principal;
 import junit.framework.TestCase;
 import org.apache.commons.codec.binary.Base64;
 import org.jasig.cas.TestUtils;
+import org.jasig.cas.support.saml.util.SamlTestUtils;
 import org.jasig.cas.util.PrivateKeyFactoryBean;
 import org.jasig.cas.util.PublicKeyFactoryBean;
 import org.springframework.core.io.ClassPathResource;
@@ -63,7 +64,7 @@ public class GoogleAccountsServiceTests extends TestCase {
         final MockHttpServletRequest request = new MockHttpServletRequest();
         
         final String SAMLRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><samlp:AuthnRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\" ID=\"5545454455\" Version=\"2.0\" IssueInstant=\"Value\" ProtocolBinding=\"urn:oasis:names.tc:SAML:2.0:bindings:HTTP-Redirect\" ProviderName=\"https://localhost:8443/myRutgers\" AssertionConsumerServiceURL=\"https://localhost:8443/myRutgers\"/>";
-        request.setParameter("SAMLRequest", encodeMessage(SAMLRequest));
+        request.setParameter("SAMLRequest", SamlTestUtils.encodeMessage(SAMLRequest));
         
         return GoogleAccountsService.createServiceFrom(request, privateKey, publicKey, "username");
     }
@@ -82,19 +83,4 @@ public class GoogleAccountsServiceTests extends TestCase {
     //    assertTrue(response.getAttributes().containsKey("SAMLResponse"));
     }
 
-    
-    protected static String encodeMessage(final String xmlString) throws IOException {
-        byte[] xmlBytes = xmlString.getBytes("UTF-8");
-        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-        DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(
-          byteOutputStream);
-        deflaterOutputStream.write(xmlBytes, 0, xmlBytes.length);
-        deflaterOutputStream.close();
-
-        // next, base64 encode it
-        Base64 base64Encoder = new Base64();
-        byte[] base64EncodedByteArray = base64Encoder.encode(byteOutputStream
-          .toByteArray());
-        return new String(base64EncodedByteArray);
-    }
 }
