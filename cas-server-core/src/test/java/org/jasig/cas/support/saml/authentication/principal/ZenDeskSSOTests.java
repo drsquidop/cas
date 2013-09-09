@@ -2,6 +2,7 @@ package org.jasig.cas.support.saml.authentication.principal;
 
 import junit.framework.TestCase;
 import org.jasig.cas.TestUtils;
+import org.jasig.cas.support.saml.util.CredentialAccess;
 import org.jasig.cas.support.saml.util.CredentialFactoryBean;
 import org.jasig.cas.support.saml.util.SamlTestUtils;
 import org.opensaml.xml.security.credential.Credential;
@@ -31,17 +32,17 @@ public class ZenDeskSSOTests extends TestCase {
         credentialFactoryBean.setAlias("selfsigned");
         credentialFactoryBean.setPassword("password");
 
-        assertTrue(credentialFactoryBean.getObjectType().equals(Credential.class));
+        assertTrue(credentialFactoryBean.getObjectType().equals(CredentialAccess.class));
         credentialFactoryBean.afterPropertiesSet();
 
-        Credential credential = (Credential) credentialFactoryBean.getObject();
+        CredentialAccess credential = (CredentialAccess) credentialFactoryBean.getObject();
 
         final MockHttpServletRequest request = new MockHttpServletRequest();
 
         final String SAMLRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><samlp:AuthnRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\" ID=\"saml-5545454455\" Version=\"2.0\" IssueInstant=\"Value\" ProtocolBinding=\"urn:oasis:names.tc:SAML:2.0:bindings:HTTP-Redirect\" ProviderName=\"https://localhost:8443/myRutgers\" AssertionConsumerServiceURL=\"https://localhost:8443/myRutgers\"/>";
         request.setParameter("SAMLRequest", SamlTestUtils.encodeMessage(SAMLRequest));
 
-        return ZenDeskSSOService.createServiceFrom(request, credential, null);
+        return ZenDeskSSOService.createServiceFrom(request, credential.getCredential(), null);
     }
 
     protected void setUp() throws Exception {

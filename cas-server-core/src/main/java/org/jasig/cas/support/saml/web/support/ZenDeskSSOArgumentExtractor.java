@@ -2,6 +2,7 @@ package org.jasig.cas.support.saml.web.support;
 
 import org.jasig.cas.authentication.principal.WebApplicationService;
 import org.jasig.cas.support.saml.authentication.principal.ZenDeskSSOService;
+import org.jasig.cas.support.saml.util.CredentialAccess;
 import org.jasig.cas.web.support.AbstractSingleSignOutEnabledArgumentExtractor;
 import org.opensaml.xml.security.credential.Credential;
 
@@ -17,11 +18,12 @@ import javax.validation.constraints.NotNull;
  */
 public class ZenDeskSSOArgumentExtractor extends AbstractSingleSignOutEnabledArgumentExtractor {
     @NotNull
-    private Credential credential;
+    private CredentialAccess credentialAccess;
 
     private String alternateUsername;
 
     public WebApplicationService extractServiceInternal(final HttpServletRequest request) {
+        Credential credential = credentialAccess.getCredential();
         return ZenDeskSSOService.createServiceFrom(request, credential, alternateUsername);
     }
 
@@ -43,7 +45,7 @@ public class ZenDeskSSOArgumentExtractor extends AbstractSingleSignOutEnabledArg
      *
 //     * @param credential the SAML credential
      */
-    public void setCredential(final Credential credential) {
-        this.credential = credential;
+    public void setCredential(final CredentialAccess credentialAccess) {
+        this.credentialAccess = credentialAccess;
     }
 }

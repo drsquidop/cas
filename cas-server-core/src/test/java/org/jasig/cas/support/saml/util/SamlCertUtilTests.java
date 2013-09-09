@@ -65,10 +65,10 @@ public class SamlCertUtilTests extends TestCase {
         credentialFactoryBean.setAlias("selfsigned");
         credentialFactoryBean.setPassword("password");
 
-        assertTrue(credentialFactoryBean.getObjectType().equals(Credential.class));
+        assertTrue(credentialFactoryBean.getObjectType().equals(CredentialAccess.class));
         credentialFactoryBean.afterPropertiesSet();
 
-        Credential signingCredential = (Credential) credentialFactoryBean.getObject();
+        Credential signingCredential = ((CredentialAccess) credentialFactoryBean.getObject()).getCredential();
 
 
         Response resp = null;

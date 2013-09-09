@@ -19,6 +19,7 @@
 package org.jasig.cas.support.saml.web.support;
 
 import junit.framework.TestCase;
+import org.jasig.cas.support.saml.util.CredentialAccess;
 import org.jasig.cas.support.saml.util.CredentialFactoryBean;
 import org.opensaml.xml.security.credential.Credential;
 import org.springframework.core.io.ClassPathResource;
@@ -36,11 +37,11 @@ public class ZenDeskSSOArgumentExtractorTests extends TestCase {
         credentialFactoryBean.setAlias("selfsigned");
         credentialFactoryBean.setPassword("password");
 
-        assertTrue(credentialFactoryBean.getObjectType().equals(Credential.class));
+        assertTrue(credentialFactoryBean.getObjectType().equals(CredentialAccess.class));
         credentialFactoryBean.afterPropertiesSet();
 
         this.extractor = new ZenDeskSSOArgumentExtractor();
-        this.extractor.setCredential((Credential) credentialFactoryBean.getObject());
+        this.extractor.setCredential((CredentialAccess) credentialFactoryBean.getObject());
 
         super.setUp();
     }

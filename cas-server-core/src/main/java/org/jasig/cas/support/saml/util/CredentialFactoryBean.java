@@ -28,73 +28,11 @@ public class CredentialFactoryBean extends AbstractFactoryBean {
     private String password;
 
     protected final Object createInstance() throws Exception {
-        final InputStream is = resource.getInputStream();
-        try {
-            KeyStore ks = null;
-            char[] pw = password.toCharArray();
-
-            // Get Default Instance of KeyStore
-            try
-            {
-                ks = KeyStore.getInstance(KeyStore.getDefaultType());
-            }
-            catch (KeyStoreException e)
-            {
-                logger.error("Error while initializing keystore", e);
-            }
-
-            // Load KeyStore
-            try
-            {
-                ks.load(is, pw);
-            }
-            catch (NoSuchAlgorithmException e)
-            {
-                logger.error("Failed to Load the KeyStore:: ", e);
-            }
-            catch (CertificateException e)
-            {
-                logger.error("Failed to Load the KeyStore:: ", e);
-            }
-            catch (IOException e)
-            {
-                logger.error("Failed to Load the KeyStore:: ", e);
-            }
-
-            // Get Private Key Entry From Certificate
-            KeyStore.PrivateKeyEntry pkEntry = null;
-            try
-            {
-                pkEntry = (KeyStore.PrivateKeyEntry) ks.getEntry(alias, new KeyStore.PasswordProtection(
-                        pw));
-            }
-            catch (NoSuchAlgorithmException e)
-            {
-                logger.error("Failed to Get Private Entry From the keystore:: " + resource.toString(), e);
-            }
-            catch (UnrecoverableEntryException e)
-            {
-                logger.error("Failed to Get Private Entry From the keystore:: " + resource.toString(), e);
-            }
-            catch (KeyStoreException e)
-            {
-                logger.error("Failed to Get Private Entry From the keystore:: " + resource.toString(), e);
-            }
-            PrivateKey pk = pkEntry.getPrivateKey();
-
-            X509Certificate certificate = (X509Certificate) pkEntry.getCertificate();
-            BasicX509Credential credential = new BasicX509Credential();
-            credential.setEntityCertificate(certificate);
-            credential.setPrivateKey(pk);
-
-            return credential;
-        } finally {
-            is.close();
-        }
+        return new CredentialAccess(resource, password, alias);
     }
 
     public Class getObjectType() {
-        return Credential.class;
+        return CredentialAccess.class;
     }
 
     public void setLocation(final Resource resource) {
