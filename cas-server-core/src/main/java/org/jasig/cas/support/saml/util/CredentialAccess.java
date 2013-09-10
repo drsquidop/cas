@@ -8,6 +8,7 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -19,28 +20,29 @@ import java.security.cert.X509Certificate;
  * Time: 8:34 AM
  * To change this template use File | Settings | File Templates.
  */
-public class CredentialAccess {
+public class CredentialAccess implements Serializable {
     private final static Logger logger = LoggerFactory.getLogger(CredentialAccess.class);
 
-    public Resource resource;
+    public String fileName;
     public String password;
     public String alias;
 
-    private Credential c = null;
+    //private Credential c = null;
 
-    CredentialAccess(Resource resource, String password, String alias) {
-        this.resource = resource;
+    CredentialAccess(String fileName, String password, String alias) {
+        this.fileName = fileName;
         this.password = password;
         this.alias = alias;
     }
 
     public Credential getCredential() {
-        if (c != null) {
-            return c;
-        } else {
+//        if (c != null) {
+//            return c;
+//        } else {
             InputStream is;
             try {
-                is = resource.getInputStream();
+                ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                is = cl.getResourceAsStream(fileName);
                 KeyStore ks = null;
                 char[] pw = password.toCharArray();
 
@@ -81,15 +83,15 @@ public class CredentialAccess {
                 }
                 catch (NoSuchAlgorithmException e)
                 {
-                    logger.error("Failed to Get Private Entry From the keystore:: " + resource.toString(), e);
+                    logger.error("Failed to Get Private Entry From the keystore:: " + fileName, e);
                 }
                 catch (UnrecoverableEntryException e)
                 {
-                    logger.error("Failed to Get Private Entry From the keystore:: " + resource.toString(), e);
+                    logger.error("Failed to Get Private Entry From the keystore:: " + fileName, e);
                 }
                 catch (KeyStoreException e)
                 {
-                    logger.error("Failed to Get Private Entry From the keystore:: " + resource.toString(), e);
+                    logger.error("Failed to Get Private Entry From the keystore:: " + fileName, e);
                 }
                 PrivateKey pk = pkEntry.getPrivateKey();
 
@@ -98,13 +100,15 @@ public class CredentialAccess {
                 credential.setEntityCertificate(certificate);
                 credential.setPrivateKey(pk);
 
-                c = credential;
-            } catch (IOException e) {
-                logger.error("IOException creating input stream for resource", e);
+//                c = credential;
+                return credential;
+
+//            } catch (IOException e) {
+//                logger.error("IOException creating input stream for resource", e);
             } finally {
-//                is.close();
-                return c;
+////                is.close();
+//                return c;
             }
-        }
+//        }
     }
 }

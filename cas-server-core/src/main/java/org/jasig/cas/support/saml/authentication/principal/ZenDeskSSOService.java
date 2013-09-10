@@ -3,6 +3,7 @@ package org.jasig.cas.support.saml.authentication.principal;
 import org.apache.commons.codec.binary.Base64;
 import org.jasig.cas.authentication.principal.AbstractWebApplicationService;
 import org.jasig.cas.authentication.principal.Response;
+import org.jasig.cas.support.saml.util.CredentialAccess;
 import org.jasig.cas.support.saml.util.SamlCertUtils;
 import org.jasig.cas.util.SamlUtils;
 import org.jdom.Document;
@@ -86,27 +87,27 @@ public class ZenDeskSSOService  extends AbstractWebApplicationService {
 
     private final String requestId;
 
-    private final Credential credential;
+    private final CredentialAccess credentialAccess;
 
     private final String alternateUserName;
 
     protected ZenDeskSSOService(final String id, final String relayState, final String requestId,
-                                final Credential credential, String alternateUserName) {
+                                final CredentialAccess credential, String alternateUserName) {
         this(id, id, null, relayState, requestId, credential, alternateUserName);
     }
 
     protected ZenDeskSSOService(final String id, final String originalUrl,
                                     final String artifactId, final String relayState, final String requestId,
-                                    final Credential credential, final String alternateUserName) {
+                                    final CredentialAccess credential, final String alternateUserName) {
         super(id, originalUrl, artifactId, null);
         this.relayState = relayState;
         this.requestId = requestId;
-        this.credential = credential;
+        this.credentialAccess = credential;
         this.alternateUserName = alternateUserName;
     }
 
     public static ZenDeskSSOService createServiceFrom(
-            final HttpServletRequest request, final Credential credential, final String alternateUserName) {
+            final HttpServletRequest request, final CredentialAccess credentialAccess, final String alternateUserName) {
         final String relayState = request.getParameter(CONST_RELAY_STATE);
 
         final String xmlRequest = decodeAuthnRequestXML(request
@@ -127,7 +128,7 @@ public class ZenDeskSSOService  extends AbstractWebApplicationService {
         final String requestId = document.getRootElement().getAttributeValue("ID");
 
         return new ZenDeskSSOService(assertionConsumerServiceUrl,
-                relayState, requestId, credential, alternateUserName);
+                relayState, requestId, credentialAccess, alternateUserName);
     }
 
     public String getSignedResponse(final String ticketId) {
@@ -144,7 +145,7 @@ public class ZenDeskSSOService  extends AbstractWebApplicationService {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        SamlCertUtils.signResponse(credential, resp);
+        SamlCertUtils.signResponse(credentialAccess.getCredential(), resp);
 
         ResponseMarshaller marshaller = new ResponseMarshaller();
         Element plain = null;
@@ -156,6 +157,7 @@ public class ZenDeskSSOService  extends AbstractWebApplicationService {
 
         return XMLHelper.nodeToString(plain);
     }
+
 
     public Response getResponse(final String ticketId) {
         final Map<String, String> parameters = new HashMap<String, String>();
@@ -177,7 +179,7 @@ public class ZenDeskSSOService  extends AbstractWebApplicationService {
         return false;
     }
 
-    public String constructSamlResponse() {
+    private String constructSamlResponse() {
         String samlResponse = TEMPLATE_SAML_RESPONSE;
 
         final Calendar c = Calendar.getInstance();

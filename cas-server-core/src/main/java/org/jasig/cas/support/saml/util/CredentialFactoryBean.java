@@ -21,22 +21,22 @@ public class CredentialFactoryBean extends AbstractFactoryBean {
     private final static Logger logger = LoggerFactory.getLogger(CredentialFactoryBean.class);
 
     @NotNull
-    private Resource resource;
+    private String fileName;
     @NotNull
     private String alias;
     @NotNull
     private String password;
 
     protected final Object createInstance() throws Exception {
-        return new CredentialAccess(resource, password, alias);
+        return new CredentialAccess(fileName, password, alias);
     }
 
     public Class getObjectType() {
         return CredentialAccess.class;
     }
 
-    public void setLocation(final Resource resource) {
-        this.resource = resource;
+    public void setLocation(final String fileName) {
+        this.fileName = fileName;
     }
 
     public void setAlias(final String alias) {

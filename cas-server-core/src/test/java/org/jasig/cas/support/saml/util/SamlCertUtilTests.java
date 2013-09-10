@@ -60,8 +60,8 @@ public class SamlCertUtilTests extends TestCase {
     {
         final CredentialFactoryBean credentialFactoryBean = new CredentialFactoryBean();
 
-        final ClassPathResource credentialResource = new ClassPathResource("keystore.jks");
-        credentialFactoryBean.setLocation(credentialResource);
+        //final ClassPathResource credentialResource = new ClassPathResource("keystore.jks");
+        credentialFactoryBean.setLocation("keystore.jks");
         credentialFactoryBean.setAlias("selfsigned");
         credentialFactoryBean.setPassword("password");
 

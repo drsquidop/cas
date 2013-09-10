@@ -23,8 +23,7 @@ public class ZenDeskSSOArgumentExtractor extends AbstractSingleSignOutEnabledArg
     private String alternateUsername;
 
     public WebApplicationService extractServiceInternal(final HttpServletRequest request) {
-        Credential credential = credentialAccess.getCredential();
-        return ZenDeskSSOService.createServiceFrom(request, credential, alternateUsername);
+        return ZenDeskSSOService.createServiceFrom(request, credentialAccess, alternateUsername);
     }
 
     /**
